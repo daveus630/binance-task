@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>title</title>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <style>
+      .labelField {
+          font-family: "Arial", Times, serif;
+          font-size: 14px;
+          display: inline-block;
+          padding: 20px;
+          width: 500px;
+      
+      }
+      .iblock {
+          display: inline-block;
+          padding-right: 8em;
+          /* border-style: solid;
+          border-width: thin; */
+          width: 60px;
+      }
+      .iLabel{
+          display: inline-block;
+          padding-right: 8em;
+          /* border-style: solid;
+          border-width: thin; */
+      }
+      .mainDiv {
+          border-style: solid;
+          border-width: thin;
+          font-family: "Arial", Times, serif;
+          font-size: 14px;
+          height: 280px;
+          overflow:hidden;
+          overflow-y: auto;
+          width: 600px;
+      }
+      .mainDiv2 {
+          top: 300px;
+          border-style: solid;
+          border-width: thin;
+          font-family: "Arial", Times, serif;
+          font-size: 14px;
+          height: 280px;
+          overflow:hidden;
+          overflow-y: auto;
+          width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="labelField">
+        <div>Buy:</div>
+        <div class="iLabel">Average</div>
+        <div class="iLabel">Amount</div>
+        <div class="iLabel">Total</div> 
+    </div>
+    <div id="mainDiv" class="mainDiv"></div>
+    <div class="labelField" id="l2">
+      <div>Sell:</div>
+      <div class="iLabel">Average</div>
+      <div class="iLabel">Amount</div>
+      <div class="iLabel">Total</div> 
+  </div>
+  <div id="mainDiv2" class="mainDiv2"></div>
+    <script>
+      const eventSource = new EventSource('http://localhost:3001/stream')
+      const eventList = document.getElementById('mainDiv')
+      const eventList2 = document.getElementById('mainDiv2')
+
+      eventSource.onmessage = (e) => { console.log(JSON.parse(e.data))
+        const parsed = JSON.parse(e.data);
+        const contentElement = document.createElement('div');
+        const avgElement = document.createElement('div');
+        const quanElement = document.createElement('div');
+        const totalElement = document.createElement('div');
+        avgElement.textContent = `${parsed.buy.average}`
+        quanElement.textContent = `${parsed.buy.quantity}`
+        totalElement.textContent = `${parsed.buy.total}`
+        avgElement.className = "iblock";
+        quanElement.className = "iblock";
+        totalElement.className = "iblock";
+        contentElement.appendChild(avgElement);
+        contentElement.appendChild(quanElement);
+        contentElement.appendChild(totalElement);
+        eventList.appendChild(contentElement);
+       
+        const contentElement2 = document.createElement('div');
+        const avgElement2 = document.createElement('div');
+        const quanElement2 = document.createElement('div');
+        const totalElement2 = document.createElement('div');
+        avgElement2.textContent = `${parsed.sell.average}`
+        quanElement2.textContent = `${parsed.sell.quantity}`
+        totalElement2.textContent = `${parsed.sell.total}`
+        avgElement2.className = "iblock";
+        quanElement2.className = "iblock";
+        totalElement2.className = "iblock";
+        contentElement2.appendChild(avgElement2);
+        contentElement2.appendChild(quanElement2);
+        contentElement2.appendChild(totalElement2);
+        eventList2.appendChild(contentElement2);
+      }
+    </script>
+  </body>
+</html>
